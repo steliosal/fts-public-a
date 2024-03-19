@@ -19,10 +19,10 @@ Given the data and their models:
 3. Send us the forked repo with your changes when you are ready
 
 ## Notes
-1. You can use `Bootstrap` or any other CSS framework for your implementation **(or none of course)**. Try to match the design
+1. You can use any CSS framework/library (e.g. `Bootstrap`) and icons for your implementation **(bonus points if you write your own CSS)**. Try to match the design as much as possible
 2. You can use any of the recent Angular versions (at least v14+)
 3. You can import or copy the data from `data.ts` file any way you want
 4. You can use any of the available browser features/APIs to persist data between page reloads
 5. The relations between the data use a classic relational approach (id based)
 6. The undo function is performed **per item** and should work for _any item list length_
-7. Try to use best practices as you would always do. Don't focus only on functionality or styling only
+7. Try to use best coding practices as you would always do
