@@ -1,0 +1,64 @@
+{
+  "pizzas": [
+    {
+      "id": 0,
+      "name": "Margherita"
+    },
+    {
+      "id": 1,
+      "name": "Pepperoni"
+    }
+  ],
+  "sizes": [
+    {
+      "id": 0,
+      "name": "Small"
+    },
+    {
+      "id": 1,
+      "name": "Medium"
+    },
+    {
+      "id": 2,
+      "name": "Large"
+    }
+  ],
+  "prices": [
+    {
+      "id": 0,
+      "pizzaId": 0,
+      "sizeId": 0,
+      "price": 3.99
+    },
+    {
+      "id": 1,
+      "pizzaId": 0,
+      "sizeId": 1,
+      "price": 5.99
+    },
+    {
+      "id": 2,
+      "pizzaId": 0,
+      "sizeId": 2,
+      "price": 7.99
+    },
+    {
+      "id": 3,
+      "pizzaId": 1,
+      "sizeId": 0,
+      "price": 4.42
+    },
+    {
+      "id": 4,
+      "pizzaId": 1,
+      "sizeId": 1,
+      "price": 6.52
+    },
+    {
+      "id": 5,
+      "pizzaId": 1,
+      "sizeId": 2,
+      "price": 8.62
+    }
+  ]
+}
