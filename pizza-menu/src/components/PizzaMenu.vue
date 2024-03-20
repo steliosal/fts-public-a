@@ -1,34 +1,47 @@
 <template>
   <div class="App">
-    <h1>Pizza</h1>
+    <h3>Pizza</h3>
     <div class="pizza-options">
-      <PizzaItem title="Pepperoni" :isOpen="openedItems[0].isOpen" @toggle-open="onToggleOpen('pepperoni')" />
-      <PizzaItem title="Margherita" :isOpen="openedItems[1].isOpen" @toggle-open="onToggleOpen('margherita')" />
+      <PizzaItem
+        v-for="(pizza, index) in pizzas"
+        :key="pizza.id"
+        :title="pizza.name"
+        :sizes="pizza.sizes"
+        :isOpen="openedItems[index]?.isOpen"
+        @toggle-open="() => onToggleOpen(pizza.id)"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { ref, onMounted } from "vue";
+import { usePizzaStore } from "../stores/pizzaStore";
 import PizzaItem from "../components/PizzaItem.vue";
 
-const openedItems = ref([
-  {
-    id: "pepperoni",
-    isOpen: false,
-  },
-  { id: "margherita", isOpen: true },
-]);
+// Accessing the store
+const pizzaStore = usePizzaStore();
+// Destructuring reactive states from the store
+const { pizzas } = storeToRefs(pizzaStore);
+const { fetchPizzaData } = pizzaStore;
 
-const onToggleOpen = (id) => {
-  openedItems.value.forEach((item) => {
-    if (item.id === id) {
-      item.isOpen = !item.isOpen;
-    } else {
-      item.isOpen = false;
-    }
-  });
-};
+const openedItems = ref([]);
+
+onMounted(async () => {
+  await fetchPizzaData();
+  openedItems.value = pizzas.value.map((pizza) => ({
+    id: pizza.id,
+    isOpen: false,
+  }));
+});
+
+function onToggleOpen(id) {
+  openedItems.value = openedItems.value.map((item) => ({
+    ...item,
+    isOpen: item.id === id ? !item.isOpen : false,
+  }));
+}
 </script>
 
 <style scoped>

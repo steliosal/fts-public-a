@@ -2,11 +2,11 @@
   "pizzas": [
     {
       "id": 0,
-      "name": "Margherita"
+      "name": "Pepperoni"
     },
     {
       "id": 1,
-      "name": "Pepperoni"
+      "name": "Margherita"
     }
   ],
   "sizes": [

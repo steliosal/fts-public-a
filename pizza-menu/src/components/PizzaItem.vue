@@ -10,7 +10,7 @@
       <!-- Expandable content here -->
       <div class="expand-box-content">
         <div class="expand-box-content-data">
-          <PizzaSize :sizes="pizzaSizes" />
+          <PizzaSize :sizes="sizes" />
         </div>
         <div class="expand-box-content-controls">
           <button>Revert</button>
@@ -21,16 +21,14 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import AngleIcon from "../components/AngleIcon.vue";
 import PizzaSize from "../components/PizzaSize.vue";
-import { usePizzaStore } from "../stores/pizzaStore";
-
-const pizzaStore = usePizzaStore();
 
 const props = defineProps({
   title: String,
   isOpen: Boolean,
+  sizes: Array,
 });
 
 const emit = defineEmits(["toggle-open"]);
@@ -41,7 +39,6 @@ const onToggleOpen = () => {
 
 const contentRef = ref(null);
 let contentHeight = "0";
-
 
 watch(
   () => props.isOpen,
@@ -61,11 +58,7 @@ onMounted(() => {
   }
 });
 
-const pizzaSizes = ref([
-  { sizeId: 1, name: "Small", price: 5, enabled: false },
-  { sizeId: 2, name: "Medium", price: 7, enabled: false },
-  { sizeId: 3, name: "Large", price: 9, enabled: false },
-]);
+
 </script>
 
 <style scoped>
@@ -108,7 +101,6 @@ const pizzaSizes = ref([
   display: flex;
   align-items: center;
   justify-content: center;
-  
 }
 .expand-box-header-icon > svg {
   display: block;
