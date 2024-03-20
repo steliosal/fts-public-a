@@ -5,8 +5,7 @@
       <PizzaItem
         v-for="(pizza, index) in pizzas"
         :key="pizza.id"
-        :title="pizza.name"
-        :sizes="pizza.sizes"
+        :pizza="pizza"
         :isOpen="openedItems[index]?.isOpen"
         @toggle-open="() => onToggleOpen(pizza.id)"
       />
@@ -22,8 +21,7 @@ import PizzaItem from "../components/PizzaItem.vue";
 
 // Accessing the store
 const pizzaStore = usePizzaStore();
-// Destructuring reactive states from the store
-const { pizzas } = storeToRefs(pizzaStore);
+const { pizzas} = storeToRefs(pizzaStore);
 const { fetchPizzaData } = pizzaStore;
 
 const openedItems = ref([]);

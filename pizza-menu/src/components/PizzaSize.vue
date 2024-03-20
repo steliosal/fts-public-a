@@ -1,32 +1,40 @@
 <template>
-  <div class="size-selector">
-    <div v-for="size in sizes" :key="size.sizeId" class="size-item" @click.stop>
-      <input type="checkbox" :id="`enable-${size.name}`" v-model="size.enabled" />
-      <label :for="`enable-${size.name}`">{{ size.name }}</label>
-      <div class="input-icon-container">
-        <div class="dollar-icon">$</div>
-        <input type="number" v-model="size.price" :disabled="!size.enabled" />
-      </div>
-    </div>
+  <div class="size-item">
+    <input type="checkbox" :isChecked="isChecked" @change="onCheckedChange(isChecked)" />
+    <label>{{ size.name }}</label>
+    <PizzaPrice :price="priceAmount" :onPriceChange="handlePriceChange" :disabled="!isChecked" />
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref } from "vue";
+import PizzaPrice from "../components/PizzaPrice.vue";
+import { storeToRefs } from "pinia";
+import { usePizzaStore } from "../stores/pizzaStore";
+
+const pizzaStore = usePizzaStore();
+const { prices } = storeToRefs(pizzaStore);
+const isChecked = ref(true);
 
 const props = defineProps({
-  sizes: {
-    type: Array,
-    default: () => [],
-  },
+  size: Object,
+  pizza: Object,
 });
 
-const sizes = computed(() =>
-  props.sizes.map((size) => ({
-    ...size,
-    enabled: true,
-  }))
-);
+const priceObj = prices.value.find((price) => {
+  if (price.sizeId === props.size.id && price.pizzaId === props.pizza.id) {
+    return price;
+  }
+});
+const priceAmount = priceObj.price;
+
+const handlePriceChange = (newPrice) => {
+  pizzaStore.updatePrice(props.pizza, props.size, newPrice);
+};
+
+const onCheckedChange = (isChecked) => {
+  isChecked = !isChecked;
+};
 </script>
 
 <style scoped>
@@ -44,22 +52,22 @@ const sizes = computed(() =>
 
 .size-item label,
 .size-item input[type="checkbox"] {
-  margin-bottom: 5px; 
+  margin-bottom: 5px;
 }
 
 .input-icon-container {
   display: flex;
-  align-items: center; 
+  align-items: center;
 }
 
 .dollar-icon {
   background-color: blue;
   color: white;
-  padding: 0 5px; 
-  border-radius: 4px; 
-  margin-right: 5px; 
+  padding: 0 5px;
+  border-radius: 4px;
+  margin-right: 5px;
   display: flex;
-  align-items: center; 
-  justify-content: center; 
+  align-items: center;
+  justify-content: center;
 }
 </style>

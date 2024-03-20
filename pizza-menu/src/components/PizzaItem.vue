@@ -1,16 +1,16 @@
 <template>
-  <div :class="`expand-box ${isOpen ? 'expand-box-open' : ''}`" @click="onToggleOpen">
-    <div class="expand-box-header">
+  <div :class="`expand-box ${isOpen ? 'expand-box-open' : ''}`">
+    <div class="expand-box-header" @click="onToggleOpen">
       <div class="expand-box-header-icon">
         <AngleIcon :isOpen="isOpen" />
       </div>
-      <div class="expand-box-header-title">{{ title }}</div>
+      <div class="expand-box-header-title">{{ pizza.name }}</div>
     </div>
     <div ref="contentRef" class="expand-area" :style="{ height: isOpen ? contentHeight : '0' }">
       <!-- Expandable content here -->
       <div class="expand-box-content">
         <div class="expand-box-content-data">
-          <PizzaSize :sizes="sizes" />
+          <PizzaSize v-for="size in sizes" :key="size.id" :size="size" :pizza="pizza" />
         </div>
         <div class="expand-box-content-controls">
           <button>Revert</button>
@@ -24,11 +24,15 @@
 import { ref, watch, onMounted } from "vue";
 import AngleIcon from "../components/AngleIcon.vue";
 import PizzaSize from "../components/PizzaSize.vue";
+import { storeToRefs } from "pinia";
+import { usePizzaStore } from "../stores/pizzaStore";
+
+const pizzaStore = usePizzaStore();
+const { sizes } = storeToRefs(pizzaStore);
 
 const props = defineProps({
-  title: String,
+  pizza: Object,
   isOpen: Boolean,
-  sizes: Array,
 });
 
 const emit = defineEmits(["toggle-open"]);
@@ -57,8 +61,6 @@ onMounted(() => {
     contentHeight = `${contentRef.value.scrollHeight}px`;
   }
 });
-
-
 </script>
 
 <style scoped>
