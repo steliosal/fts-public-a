@@ -13,7 +13,7 @@
           <PizzaSize v-for="size in sizes" :key="size.id" :size="size" :pizza="pizza" />
         </div>
         <div class="expand-box-content-controls">
-          <button v-if="isAlteredPizzaPrices(pizza)" @click="undoChanges">Undo</button>
+          <button v-if="isAlteredPizzaPrices(pizza)" @click="undoChanges" class="undo-button"><UndoIcon /></button>
         </div>
       </div>
     </div>
@@ -23,6 +23,7 @@
 <script setup>
 import { ref, watch, onMounted, computed } from "vue";
 import AngleIcon from "../components/AngleIcon.vue";
+import UndoIcon from "../components/UndoIcon.vue";
 import PizzaSize from "../components/PizzaSize.vue";
 import { storeToRefs } from "pinia";
 import { usePizzaStore } from "../stores/pizzaStore";
@@ -65,16 +66,10 @@ onMounted(() => {
   }
 });
 
-const hasChanges = computed(() => {
-  return prices.value.some((price) => {
-    const initialPrice = originalPrices.value.find((p) => p.id === price.id && price.pizzaId === props.pizza.id);
-    return initialPrice && price.price !== initialPrice.price;
-  });
-});
-
 const undoChanges = () => {
   console.log("Undoing changes");
   pizzaStore.undoPizzaPrices(props.pizza);
+  pizzaStore.resetSelectedPrices(props.pizza);
 };
 </script>
 
@@ -134,24 +129,21 @@ const undoChanges = () => {
 
 .expand-box-content {
   display: flex;
-  flex-flow: row nowrap;
-  align-items: stretch;
-  justify-content: flex-start;
-  width: 100%;
-  padding: 10px;
+
+  justify-content: space-between;
+
+  padding: 20px;
 }
 
 .expand-box-content-controls {
-  flex: 0 0 100px;
-  width: 100%;
   display: flex;
-  flex-flow: column nowrap;
+  flex-flow: column;
   align-items: center;
   justify-content: flex-end;
 }
 
 .expand-box-content-data {
-  flex: 1;
+  display: flex;
 }
 
 .expand-area {
@@ -160,5 +152,18 @@ const undoChanges = () => {
   overflow: hidden;
   height: 0;
   transition: height 0.3s ease-in-out;
+}
+
+.undo-button {
+  border: 2px solid #7ca2b7;
+  background-color: white;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
 }
 </style>

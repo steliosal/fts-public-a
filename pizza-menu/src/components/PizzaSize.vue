@@ -1,7 +1,7 @@
 <template>
   <div class="size-item">
-    <input type="checkbox" v-model="isChecked" @change="onCheckedChange" />
-    <label>{{ size.name }}</label>
+    <input type="checkbox" :checked="isChecked" :id="`checkbox-${size.id}-${pizza.id}`" @change="onCheckedChange" />
+    <label :for="`checkbox-${size.id}-${pizza.id}`">{{ size.name }}</label>
     <PizzaPrice :price="priceAmount" :onPriceChange="handlePriceChange" :disabled="!isChecked" />
   </div>
 </template>
@@ -13,9 +13,9 @@ import { storeToRefs } from "pinia";
 import { usePizzaStore } from "../stores/pizzaStore";
 
 const pizzaStore = usePizzaStore();
-const { prices } = storeToRefs(pizzaStore);
-const { updatePrice } = pizzaStore;
-const isChecked = ref(true);
+
+const { updatePrice, getPrice, getIsSelectedPrice, toggleSelectedPrice } = pizzaStore;
+
 const previousPrice = ref(null);
 
 const props = defineProps({
@@ -23,49 +23,38 @@ const props = defineProps({
   pizza: Object,
 });
 
-// const priceObj = prices.value.find((price) => {
-//   if (price.sizeId === props.size.id && price.pizzaId === props.pizza.id) {
-//     return price;
-//   }
-// });
-// const priceAmount = priceObj.price;
-
 // Determine initial price
 // Note: You might need to adjust this part based on how you manage state.
 const priceAmount = computed(() => {
-  const priceObj = prices.value.find((price) => price.sizeId === props.size.id && price.pizzaId === props.pizza.id);
+  const priceObj = getPrice(props.pizza, props.size);
   return priceObj ? priceObj.price : 0;
 });
 
-// Watch for changes in isChecked to update the price accordingly
-watch(isChecked, (newVal) => {
-  if (!newVal) {
-    // Unchecked, remember the current price and set it to 0
-    previousPrice.value = priceAmount.value;
-    updatePrice(props.pizza, props.size, 0.0);
-  } else if (previousPrice.value !== null) {
-    // Rechecked, restore the previous price if it exists
-    updatePrice(props.pizza, props.size, previousPrice.value);
-  }
+const isChecked = computed(() => {
+  return getIsSelectedPrice(props.pizza, props.size);
 });
 
-// const handlePriceChange = (newPrice) => {
-//   if (isChecked.value) {
-//     // Only update price if the item is checked
-//     updatePrice(props.pizza, props.size, newPrice);
+const onCheckedChange = () => {
+  toggleSelectedPrice(props.pizza, props.size);
+};
+
+// Watch for changes in isChecked to update the price accordingly
+// watch(isChecked, (newVal) => {
+//   if (!newVal) {
+//     // Unchecked, remember the current price and set it to 0
+//     previousPrice.value = priceAmount.value;
+//     updatePrice(props.pizza, props.size, 0.0);
+//   } else if (previousPrice.value !== null) {
+//     // Rechecked, restore the previous price if it exists
+//     updatePrice(props.pizza, props.size, previousPrice.value);
 //   }
-// };
+// });
+
 const handlePriceChange = (newPrice) => {
   if (isChecked.value) {
     updatePrice(props.pizza, props.size, newPrice);
     // Update the previous price whenever the price changes while checked
     previousPrice.value = newPrice;
-  }
-};
-
-const onCheckedChange = () => {
-  if (!isChecked.value) {
-    updatePrice(props.pizza, props.size, 0.0); // Set price to 0.00 when unchecked
   }
 };
 </script>
@@ -74,13 +63,14 @@ const onCheckedChange = () => {
 .size-selector {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
 }
 
 .size-item {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  margin-right: 15px;
+  gap: 5px;
 }
 
 .size-item label,
@@ -102,5 +92,40 @@ const onCheckedChange = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.size-item input[type="checkbox"] {
+  display: none;
+}
+.size-item label {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  line-height: 25px;
+  user-select: none;
+}
+
+.size-item label:before {
+  content: "";
+  display: block;
+  width: 20px; /* Size of the custom checkbox */
+  height: 20px; /* Size of the custom checkbox */
+  background-color: #f0f0f0; /* Background color of the checkbox */
+  border: 2px solid #7ca2b7; /* Border color */
+  border-radius: 4px; /* Optional for rounded corners */
+}
+.size-item input[type="checkbox"]:checked + label:before {
+  background-color: #7ca2b7; /* Change background color when checked */
+}
+
+/* Optional: add a checkmark when checked */
+.size-item input[type="checkbox"]:checked + label:after {
+  content: "✔"; /* Unicode checkmark */
+  position: absolute;
+  color: white; /* Checkmark color */
+  font-size: 12px; /* Adjust as needed */
 }
 </style>

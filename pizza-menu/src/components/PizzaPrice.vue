@@ -34,10 +34,38 @@ watch(
 .pizza-price-input {
   display: flex;
   align-items: center;
+  border: 2px solid #7ca2b7;
+  border-radius: 4px;
+  background-color: #7ca2b7;
 }
 
 .dollar-icon {
-  background-color: blue;
+  color: white;
+  padding-left: 9px;
+  padding-right: 9px;
+  background-color: #7ca2b7;
+}
+input[type="number"] {
+  border: none;
+  width: 50px;
+  padding: 8px;
+  outline: none;
+  text-align: center;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"]::-ms-clear,
+input[type="number"]::-ms-reveal {
+  display: none;
+}
+
+/* .dollar-icon {
+  background-color: #7ca2b7;
   color: white;
   padding: 0 5px;
   border-radius: 4px;
@@ -45,5 +73,5 @@ watch(
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 </style>

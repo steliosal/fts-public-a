@@ -7,6 +7,7 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
   const sizes = ref([]);
   const prices = ref([]);
   const initialPrices = ref([]);
+  const selectedPrices = ref([]);
 
   async function fetchPizzaData() {
     try {
@@ -24,16 +25,12 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
         // No stored prices, use the ones from the fetched data
         prices.value = response.data.prices;
       }
+      selectedPrices.value = prices.value.map((price) => price.id);
+      console.log(selectedPrices.value);
     } catch (error) {
       console.error("There was an error fetching the pizza data:", error);
     }
   }
-
-  // const isAlteredData = computed(() => {
-  //   if (JSON.stringify(prices.value) !== JSON.stringify(initialPrices.value)) {
-  //     return true;
-  //   }
-  // });
 
   function isAlteredPizzaPrices(pizza) {
     let isAltered = false;
@@ -64,15 +61,21 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
     localStorage.setItem("prices", JSON.stringify(prices.value));
   }
 
-  // async function updatePrice(pizza, size, priceNumber) {
-  //   console.log("price:", priceNumber);
-  //   const priceObj = prices.value.find((price) => {
-  //     if (price.sizeId === size.id && price.pizzaId === pizza.id) {
-  //       return price;
-  //     }
-  //   });
-  //   priceObj.price = priceNumber;
-  // }
+  function resetSelectedPrices(pizza) {
+    const allPizzaPrices = prices.value.filter((price) => price.pizzaId === pizza.id);
+    allPizzaPrices.forEach((price) => {
+      const isIncluded = selectedPrices.value.includes(price.id);
+      if (!isIncluded) {
+        selectedPrices.value.push(price.id);
+      }
+    });
+  }
+
+  function getPrice(pizza, size) {
+    // Find the price object that matches the pizza and size
+    const priceObj = prices.value.find((price) => price.sizeId === size.id && price.pizzaId === pizza.id);
+    return priceObj;
+  }
 
   async function updatePrice(pizza, size, priceNumber) {
     console.log("price:", priceNumber);
@@ -88,5 +91,34 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
     console.log("Prices have been updated:", newPrices);
   });
 
-  return { pizzas, sizes, prices, isAlteredPizzaPrices, fetchPizzaData, updatePrice, undoPizzaPrices };
+  function getIsSelectedPrice(pizza, size) {
+    const price = getPrice(pizza, size);
+    return selectedPrices.value.includes(price.id);
+  }
+
+  function toggleSelectedPrice(pizza, size) {
+    const price = getPrice(pizza, size);
+    const isIdSelected = selectedPrices.value.includes(price.id);
+    if (isIdSelected) {
+      // remove from selectedPrices
+      selectedPrices.value = selectedPrices.value.filter((id) => id !== price.id);
+    } else {
+      // add to selectedPrices
+      selectedPrices.value.push(price.id);
+    }
+  }
+
+  return {
+    pizzas,
+    sizes,
+    prices,
+    getIsSelectedPrice,
+    toggleSelectedPrice,
+    isAlteredPizzaPrices,
+    getPrice,
+    fetchPizzaData,
+    updatePrice,
+    undoPizzaPrices,
+    resetSelectedPrices,
+  };
 });
