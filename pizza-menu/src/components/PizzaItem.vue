@@ -13,7 +13,7 @@
           <PizzaSize v-for="size in sizes" :key="size.id" :size="size" :pizza="pizza" />
         </div>
         <div class="expand-box-content-controls">
-          <button>Revert</button>
+          <button v-if="isAlteredPizzaPrices(pizza)" @click="undoChanges">Undo</button>
         </div>
       </div>
     </div>
@@ -21,14 +21,17 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import AngleIcon from "../components/AngleIcon.vue";
 import PizzaSize from "../components/PizzaSize.vue";
 import { storeToRefs } from "pinia";
 import { usePizzaStore } from "../stores/pizzaStore";
 
 const pizzaStore = usePizzaStore();
-const { sizes } = storeToRefs(pizzaStore);
+const { sizes, prices, originalPrices } = storeToRefs(pizzaStore);
+const { isAlteredPizzaPrices } = pizzaStore;
+
+// const isAlteredData = ref(false);
 
 const props = defineProps({
   pizza: Object,
@@ -61,6 +64,18 @@ onMounted(() => {
     contentHeight = `${contentRef.value.scrollHeight}px`;
   }
 });
+
+const hasChanges = computed(() => {
+  return prices.value.some((price) => {
+    const initialPrice = originalPrices.value.find((p) => p.id === price.id && price.pizzaId === props.pizza.id);
+    return initialPrice && price.price !== initialPrice.price;
+  });
+});
+
+const undoChanges = () => {
+  console.log("Undoing changes");
+  pizzaStore.undoPizzaPrices(props.pizza);
+};
 </script>
 
 <style scoped>
