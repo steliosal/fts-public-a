@@ -8,7 +8,8 @@ depicts a part of an online ordering menu.
 * Each item card on the design works like a bootstrap accordion (see https://getbootstrap.com/docs/5.0/components/accordion/)
 * When you click on the item name the size/price section expands. At the same time the other item cards collapse.
 * When you uncheck a size, the related price is set to 0.00, and the input above is disabled
-* User can edit the price (only numbers are allowed). Price changes **persist after page refresh**
+* User can edit the price (only numbers are allowed). 
+* Price changes **persist after page refresh**
 * Each item card has an "Undo" button/function, which is **only displayed** if the user has made any changes to item since the app initialized. When clicked, the selected item's state reverts to the initial one (what we had when the page first loaded)
 
 Given the data and their models:

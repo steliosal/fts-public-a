@@ -1,7 +1,7 @@
 <template>
   <div class="pizza-price-input">
     <div class="dollar-icon">$</div>
-    <input type="number" :value="localPrice" @input="handlePriceChange" :disabled="disabled" />
+    <input type="number" :value="disabled ? 0.0 : localPrice" @input="handlePriceChange" :disabled="disabled" />
   </div>
 </template>
 
@@ -14,21 +14,20 @@ const props = defineProps({
   disabled: Boolean,
 });
 
-const localPrice = ref(props.disabled ? 0 : props.price);
+const localPrice = ref(props.price);
 
-// Emit price change to parent component
 function handlePriceChange(e) {
-  // localPrice.value = e.target.value;
-  props.onPriceChange(parseFloat(e.target.value));
+  if (!props.disabled) {
+    props.onPriceChange(parseFloat(e.target.value));
+  }
 }
-
-// Watch for external price changes
-// watch(
-//   () => props.price,
-//   (newPrice) => {
-//     localPrice.value = newPrice;
-//   }
-// );
+// Update localPrice when external price changes
+watch(
+  () => props.price,
+  (newPrice) => {
+    localPrice.value = newPrice;
+  }
+);
 </script>
 
 <style scoped>
