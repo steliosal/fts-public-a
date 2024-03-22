@@ -23,7 +23,7 @@ import PizzaItem from "../components/PizzaItem.vue";
 
 // Access the store
 const pizzaStore = usePizzaStore();
-const { pizzas} = storeToRefs(pizzaStore);
+const { pizzas } = storeToRefs(pizzaStore);
 const { fetchPizzaData } = pizzaStore;
 
 const openedItems = ref([]);
@@ -49,7 +49,6 @@ function onToggleOpen(id) {
 <style scoped>
 .App {
   display: block;
-  width: 100%;
   text-align: left;
   font-family: sans-serif;
   color: black;
@@ -59,6 +58,6 @@ function onToggleOpen(id) {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: 50vw;
+  width: 100%;
 }
 </style>
