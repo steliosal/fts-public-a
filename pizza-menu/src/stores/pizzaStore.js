@@ -17,7 +17,7 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
       sizes.value = response.data.sizes;
 
       // Store a deep copy of the initial prices
-      initialPrices.value = response.data.prices;
+      initialPrices.value = JSON.parse(JSON.stringify(response.data.prices));
 
       // Check if there are stored prices in localStorage
       const storedPrices = localStorage.getItem("prices");
@@ -25,7 +25,7 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
         prices.value = JSON.parse(storedPrices);
       } else {
         // No stored prices, use the ones from the fetched data
-        prices.value = response.data.prices;
+        prices.value = JSON.parse(JSON.stringify(response.data.prices));
       }
       // Initialize selectedPrices based on current prices
       selectedPrices.value = prices.value.map((price) => price.id);
