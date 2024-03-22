@@ -1,19 +1,28 @@
-### Clone the repo:
+## Getting Started
 
-`git clone https://github.com/steliosal/fts-public-a.git`
+1. Clone the repository: `git clone https://github.com/steliosal/fts-public-a.git`
+2. Navigate to directory: `cd fts-public-a/pizza-menu`
+3. Install the necessary dependencies: `npm install`
+4. Start the development server: `npm run dev`
 
-### Navigate to the project directory:
+## Prerequisites
+Before you begin, ensure you have met the following requirements:
 
-`cd fts-public-a`
-`cd pizza-menu`
+- **Node.js**: This project requires a relatively recent version of Node.js, version 14 or higher. There are two recommended ways to install or update Node.js on your machine:
 
-### Install the necessary dependencies:
+  1. **Direct Installation**: You can download and install Node.js directly from the [Node.js official website](https://nodejs.org/). Ensure you select a version that is 14 or higher.
+  
+  2. **Using Node Version Manager (nvm)**: For managing multiple Node.js versions on your machine, it is recommended to use Node Version Manager (nvm). This is especially useful if you are working on multiple projects that require different versions of Node.js. You can find installation instructions and usage details for `nvm` [here](https://github.com/nvm-sh/nvm). Once `nvm` is installed, you can install Node.js version 14 by running:
+  
+     ```sh
+     nvm install 14
+     nvm use 14
+     ```
 
-`npm install`
-
-### Start the development server:
-
-`npm run dev`
+- **Supported Browsers**: The project has been tested and is known to work on the following browsers:
+  - Google Chrome
+  - Mozilla Firefox
+  - Microsoft Edge
 
 # Description
 

@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, watch } from "vue";
+import { ref, watch } from "vue";
 
 // Define props
 const props = defineProps({
@@ -55,6 +55,8 @@ input[type="number"] {
   padding: 8px;
   outline: none;
   text-align: center;
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
@@ -67,5 +69,4 @@ input[type="number"]::-ms-clear,
 input[type="number"]::-ms-reveal {
   display: none;
 }
-
 </style>
