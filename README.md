@@ -1,19 +1,19 @@
 ### Clone the repo:
 
-**git clone https://github.com/steliosal/fts-public-a.git**
+`git clone https://github.com/steliosal/fts-public-a.git`
 
 ### Navigate to the project directory:
 
-**cd fts-public-a**
-**cd pizza-menu**
+`cd fts-public-a`
+`cd pizza-menu`
 
 ### Install the necessary dependencies:
 
-**npm install**
+`npm install`
 
 ### Start the development server:
 
-**npm run dev**
+`npm run dev`
 
 # Description
 
