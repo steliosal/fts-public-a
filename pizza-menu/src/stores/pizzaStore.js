@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import axios from "axios";
-import { ref, watch, computed } from "vue";
+import { ref } from "vue";
 
 export const usePizzaStore = defineStore("pizzaStore", () => {
   const pizzas = ref([]);
@@ -9,6 +9,7 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
   const initialPrices = ref([]);
   const selectedPrices = ref([]);
 
+  // Fetch pizza data from a local JSON file or API endpoint
   async function fetchPizzaData() {
     try {
       const response = await axios.get("/data.json");
@@ -17,21 +18,23 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
 
       // Store a deep copy of the initial prices
       initialPrices.value = response.data.prices;
+
+      // Check if there are stored prices in localStorage
       const storedPrices = localStorage.getItem("prices");
       if (storedPrices) {
-        // Parse the stored string back into an array and use it
         prices.value = JSON.parse(storedPrices);
       } else {
         // No stored prices, use the ones from the fetched data
         prices.value = response.data.prices;
       }
+      // Initialize selectedPrices based on current prices
       selectedPrices.value = prices.value.map((price) => price.id);
-      console.log(selectedPrices.value);
     } catch (error) {
       console.error("There was an error fetching the pizza data:", error);
     }
   }
 
+  // Check if prices for a pizza have been altered from their initial value
   function isAlteredPizzaPrices(pizza) {
     let isAltered = false;
     prices.value.forEach((price) => {
@@ -45,22 +48,20 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
     return isAltered;
   }
 
+  // Undo prices for a pizza to their initial values
   function undoPizzaPrices(pizza) {
-    console.log("Undoing prices for pizza:", pizza);
-    console.log("prices:", prices.value);
     prices.value.forEach((price) => {
       if (price.pizzaId === pizza.id) {
-        console.log("price:", price);
         const originalPrice = initialPrices.value.find((p) => p.id === price.id);
-        console.log("originalPrice:", originalPrice);
         price.price = originalPrice.price;
       }
     });
 
-    // Update localStorage with the reverted prices
+    // Save prices in localStorage
     localStorage.setItem("prices", JSON.stringify(prices.value));
   }
 
+  // Reset selected prices for a pizza to their initial values
   function resetSelectedPrices(pizza) {
     const allPizzaPrices = prices.value.filter((price) => price.pizzaId === pizza.id);
     allPizzaPrices.forEach((price) => {
@@ -71,14 +72,15 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
     });
   }
 
+  // Find the price object for a specific pizza and size
   function getPrice(pizza, size) {
-    // Find the price object that matches the pizza and size
     const priceObj = prices.value.find((price) => price.sizeId === size.id && price.pizzaId === pizza.id);
     return priceObj;
   }
 
+  // Update the price for a specific pizza and size
   async function updatePrice(pizza, size, priceNumber) {
-    console.log("price:", priceNumber);
+    // console.log("price:", priceNumber);
     const priceObj = prices.value.find((price) => price.sizeId === size.id && price.pizzaId === pizza.id);
     if (priceObj) {
       priceObj.price = priceNumber;
@@ -87,15 +89,13 @@ export const usePizzaStore = defineStore("pizzaStore", () => {
     }
   }
 
-  watch(prices, (newPrices) => {
-    console.log("Prices have been updated:", newPrices);
-  });
-
+  // Check if a price is selected
   function getIsSelectedPrice(pizza, size) {
     const price = getPrice(pizza, size);
     return selectedPrices.value.includes(price.id);
   }
 
+  // Toggle a price as selected or unselected
   function toggleSelectedPrice(pizza, size) {
     const price = getPrice(pizza, size);
     const isIdSelected = selectedPrices.value.includes(price.id);

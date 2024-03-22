@@ -1,4 +1,5 @@
 <template>
+  <!-- Container for the pizza price input -->
   <div class="pizza-price-input">
     <div class="dollar-icon">$</div>
     <input type="number" :value="disabled ? 0.0 : localPrice" @input="handlePriceChange" :disabled="disabled" />
@@ -8,14 +9,17 @@
 <script setup>
 import { defineProps, ref, watch } from "vue";
 
+// Define props
 const props = defineProps({
   price: Number,
   onPriceChange: Function,
   disabled: Boolean,
 });
 
+// Reactive state to manage the price input value
 const localPrice = ref(props.price);
 
+// Handler for when the price input changes
 function handlePriceChange(e) {
   if (!props.disabled) {
     props.onPriceChange(parseFloat(e.target.value));
@@ -64,14 +68,4 @@ input[type="number"]::-ms-reveal {
   display: none;
 }
 
-/* .dollar-icon {
-  background-color: #7ca2b7;
-  color: white;
-  padding: 0 5px;
-  border-radius: 4px;
-  margin-right: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
 </style>

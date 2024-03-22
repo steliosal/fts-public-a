@@ -1,5 +1,7 @@
 <template>
+  <!-- Container for an individual pizza item -->
   <div :class="`expand-box ${isOpen ? 'expand-box-open' : ''}`">
+    <!-- Clickable Header to toggle open/close state -->
     <div class="expand-box-header" @click="onToggleOpen">
       <div class="expand-box-header-icon">
         <AngleIcon :isOpen="isOpen" />
@@ -10,9 +12,11 @@
       <!-- Expandable content here -->
       <div class="expand-box-content">
         <div class="expand-box-content-data">
+          <!-- List of pizza sizes for this item -->
           <PizzaSize v-for="size in sizes" :key="size.id" :size="size" :pizza="pizza" />
         </div>
         <div class="expand-box-content-controls">
+          <!-- Undo button to revert changes -->
           <button v-if="isAlteredPizzaPrices(pizza)" @click="undoChanges" class="undo-button"><UndoIcon /></button>
         </div>
       </div>
@@ -21,33 +25,36 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue";
+import { ref, watch, onMounted } from "vue";
 import AngleIcon from "../components/AngleIcon.vue";
 import UndoIcon from "../components/UndoIcon.vue";
 import PizzaSize from "../components/PizzaSize.vue";
 import { storeToRefs } from "pinia";
 import { usePizzaStore } from "../stores/pizzaStore";
 
+// Access the store
 const pizzaStore = usePizzaStore();
-const { sizes, prices, originalPrices } = storeToRefs(pizzaStore);
+const { sizes } = storeToRefs(pizzaStore);
 const { isAlteredPizzaPrices } = pizzaStore;
 
-// const isAlteredData = ref(false);
-
+// Define props
 const props = defineProps({
   pizza: Object,
   isOpen: Boolean,
 });
 
+// Emit the toggle-open event
 const emit = defineEmits(["toggle-open"]);
 
 const onToggleOpen = () => {
   emit("toggle-open");
 };
 
+// Ref for the content area
 const contentRef = ref(null);
 let contentHeight = "0";
 
+// Adjust the content height based on the isOpen state
 watch(
   () => props.isOpen,
   (newValue) => {
@@ -60,14 +67,15 @@ watch(
   { immediate: true }
 );
 
+// Adjust the content height on mount
 onMounted(() => {
   if (props.isOpen && contentRef.value) {
     contentHeight = `${contentRef.value.scrollHeight}px`;
   }
 });
 
+// Revert any changes made to the pizza's prices
 const undoChanges = () => {
-  console.log("Undoing changes");
   pizzaStore.undoPizzaPrices(props.pizza);
   pizzaStore.resetSelectedPrices(props.pizza);
 };
@@ -163,7 +171,7 @@ const undoChanges = () => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 }
 </style>

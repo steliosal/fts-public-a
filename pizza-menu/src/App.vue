@@ -1,4 +1,5 @@
 <template>
+  <!-- Render the PizzaMenu component -->
   <PizzaMenu />
 </template>
 

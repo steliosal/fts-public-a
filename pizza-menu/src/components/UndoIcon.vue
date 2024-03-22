@@ -1,4 +1,3 @@
-<!-- UndoIcon.vue -->
 <template>
   <svg viewBox="0 0 24 24" class="refresh-icon" xmlns="http://www.w3.org/2000/svg">
     <path
@@ -16,7 +15,7 @@ export default {
 <style scoped>
 .refresh-icon {
   fill: #7ca2b7;
-  width: 32px; /* Adjust size as needed */
-  height: 32px; /* Adjust size as needed */
+  width: 32px; 
+  height: 32px;
 }
 </style>
